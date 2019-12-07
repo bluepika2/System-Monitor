@@ -19,16 +19,22 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
     vector<int> pids = LinuxParser::Pids();
-    int n = pids.size();
-    for(int i = 0; i < n; i++) {
-        Process process;
-        process.pid = pids[i];
-        processes_.push_back(process);
+    // int n = pids.size();
+    std::set<int> pidSet;
+    for(Process const& process: processes_) {
+        pidSet.insert(process.Pid());
+    }
+    for(int pid: pids) {
+        if(pidSet.find(pid) == pidSet.end()) {
+            Process process;
+            process.pid = pid;
+            processes_.push_back(process);
+        }        
     }
     for(auto& process: processes_) {
-        process.CpuUtilization();
+        process.CpuUtilizationUpdate();
     }
-    sort(processes_.begin(), processes_.end());
+    sort(processes_.begin(), processes_.end(), std::greater<Process>());
     return processes_;
 }
 

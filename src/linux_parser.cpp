@@ -237,11 +237,13 @@ long LinuxParser::UpTime(int pid) {
   string line;
   std::ifstream fileStream(kProcDirectory + to_string(pid) + kStatFilename);
   long number;
+  string str;
   if(fileStream.is_open()) {
     std::getline(fileStream, line);
     std::istringstream lineStream(line);
     for(int i = 0; i < 22; i++) {
-      lineStream >> number;
+      lineStream >> str;
+      if(i==21) number = stoi(str);
     }
   }
   return number/sysconf(_SC_CLK_TCK);
