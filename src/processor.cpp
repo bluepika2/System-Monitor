@@ -16,5 +16,5 @@ float Processor::Utilization() {
     int virtalTime = jiffies[8] + jiffies[9];
     int stealTime = jiffies[7];
     int totalTime = userTime + niceTime + idleTime + systemTime + virtalTime + stealTime;
-    return 1.0*idleTime/totalTime;
+    return (totalTime-idleTime)/(float)totalTime;
 }

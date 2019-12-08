@@ -71,18 +71,24 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() { 
   string line;
   string memoryName;
-  float memory;
-  vector<float> memoryVector;
+  string memory;
+  string MemTotal;
+  string MemFree;
   std::ifstream fileStream(kProcDirectory + kMeminfoFilename);
   if(fileStream.is_open()) {
     while(std::getline(fileStream, line)) {
       std::istringstream lineStream(line);
       lineStream >> memoryName >> memory;
-      memoryVector.push_back(memory);
-      if(memoryName == "Cached:") break;
+      if(memoryName == "MemTotal:") MemTotal = memory;
+      if(memoryName == "MemFree:") {
+        MemFree = memory;
+        break;
+      }
     }
   }
-  return (memoryVector[0] - memoryVector[1] + memoryVector[2] + memoryVector[3])/memoryVector[0]; 
+  int memTotal = stoi(MemTotal);
+  int memFree = stoi(MemFree);
+  return (memTotal-memFree)/(float)memTotal;
 }
 
 // TODO: Read and return the system uptime

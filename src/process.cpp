@@ -34,7 +34,7 @@ void Process::CpuUtilizationUpdate() {
     }
     long cpuUpTime = LinuxParser::UpTime();
     long timeInterval = cpuUpTime - starttime/sysconf(_SC_CLK_TCK);
-    this->cpuUtilization = (1.0)*(utime+stime+cutime+cstime)/sysconf(_SC_CLK_TCK)/timeInterval;
+    this->cpuUtilization = (utime+stime+cutime+cstime)/sysconf(_SC_CLK_TCK)/(float)timeInterval;
 }
 
 // TODO: Return the command that generated this process
